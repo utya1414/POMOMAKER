@@ -16,7 +16,7 @@ export default function Home() {
   function handleEnter(e) {
     if (e.key === "Enter") {
       setInputData(e.target.value)
-      fetch(URL + "insert_user", {
+      fetch(URL + "user", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -28,9 +28,14 @@ export default function Home() {
 
   const [users_data, setUsersData] = useState([])
   function handleClick() {
-    fetch(URL + "get_users")
-      .then((response) => response.json())
-      .then((data) => setUsersData(data.users))
+    fetch(URL + "user", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then((response) => response.json())
+    .then((data) => setUsersData(data.users))
   }
 
   return (
