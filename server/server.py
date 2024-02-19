@@ -13,13 +13,13 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
 db = SQLAlchemy(app)
 
 # ユーザー情報クラスを作成
-class User(db.Model):
+class Users(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user_name = db.Column(db.String(30))
     create_date = db.Column(db.String(30))
 
 # ポモドーロタイマー情報クラスを作成
-class PomodoroTimer(db.Model):
+class PomodoroTimers(db.Model):
     pomo_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     title = db.Column(db.String(30))
     maker_user_id = db.Column(db.Integer)
@@ -27,6 +27,8 @@ class PomodoroTimer(db.Model):
     work_music = db.Column(db.String(30))
     break_length = db.Column(db.Integer)
     break_music = db.Column(db.String(30))
+
+# 作業時間DB
 
 with app.app_context():
     db.create_all()
@@ -43,7 +45,7 @@ def return_home():
 def insert_user():
     user_data = request.get_json()
     today = datetime.now()
-    user = User(user_name=user_data['user_name'], create_date=today)
+    user = Users(user_name=user_data['user_name'], create_date=today)
     db.session.add(user)
     db.session.commit()
     return jsonify({'message': 'User added successfully'})
@@ -53,7 +55,7 @@ def insert_user():
 @app.route('/api/user', methods=['DELETE'])
 def delete_user():
     user_data = request.get_json()
-    user = User.query.filter_by(user_id=user_data['user_id']).first()
+    user = Users.query.filter_by(user_id=user_data['user_id']).first()
     db.session.delete(user)
     db.session.commit()
     return jsonify({'message': 'User deleted successfully'})
@@ -62,7 +64,7 @@ def delete_user():
 # 引数:なし　返却値:'users': user_id, user_name, create_dateのリスト
 @app.route('/api/user', methods=['GET'])
 def get_users():
-    users = User.query.all()
+    users = Users.query.all()
     user_list = []
     for user in users:
         user_list.append({'user_id': user.user_id, 'user_name': user.user_name, 'create_date': user.create_date})
@@ -73,7 +75,7 @@ def get_users():
 @app.route('/api/pomodoro_timer', methods=['POST'])
 def insert_pomodoro_timer():
     pomodoro_data = request.get_json()
-    pomodoro_timer = PomodoroTimer(
+    pomodoro_timer = PomodoroTimers(
         title=pomodoro_data['title'],
         maker_user_id=pomodoro_data['maker_user_id'],
         work_length=pomodoro_data['work_length'],
@@ -90,7 +92,7 @@ def insert_pomodoro_timer():
 @app.route('/api/pomodoro_timer', methods=['DELETE'])
 def delete_pomodoro_timer():
     pomodoro_data = request.get_json()
-    pomodoro_timer = PomodoroTimer.query.filter_by(pomo_id=pomodoro_data['pomo_id']).first()
+    pomodoro_timer = PomodoroTimers.query.filter_by(pomo_id=pomodoro_data['pomo_id']).first()
     db.session.delete(pomodoro_timer)
     db.session.commit()
     return jsonify({'message': 'Pomodoro Timer deleted successfully'})
@@ -99,7 +101,7 @@ def delete_pomodoro_timer():
 # 引数:なし　返却値:'pomodoro_timers': pomo_id, title, maker_user_id, work_length, work_music, break_length, break_musicのリスト
 @app.route('/api/pomodoro_timer', methods=['GET'])
 def get_pomodoro_timers():
-    pomodoro_timers = PomodoroTimer.query.all()
+    pomodoro_timers = PomodoroTimers.query.all()
     pomodoro_timer_list = []
     for pomodoro_timer in pomodoro_timers:
         pomodoro_timer_list.append({
@@ -118,7 +120,7 @@ def get_pomodoro_timers():
 @app.route('/api/pomodoro_timer/user', methods=['GET'])
 def get_pomodoro_timers_by_user():
     user_id = request.args.get('user_id')
-    pomodoro_timers = PomodoroTimer.query.filter_by(maker_user_id=user_id).all()
+    pomodoro_timers = PomodoroTimers.query.filter_by(maker_user_id=user_id).all()
     pomodoro_timer_list = []
     for pomodoro_timer in pomodoro_timers:
         pomodoro_timer_list.append({
