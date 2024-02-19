@@ -1,5 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import Youtube from "../api/youtube.jsx";
 
 export default function Home() {
   const URL = "http://127.0.0.1:8080/api/"
@@ -51,6 +52,8 @@ export default function Home() {
       <div>
         Users data: {users_data.map((user, index) => <p key={index}>{user.user_name}</p>)}
       </div>
+      <h1><br></br>以下Youtube</h1>
+      <Youtube />
     </>
   );
 }
