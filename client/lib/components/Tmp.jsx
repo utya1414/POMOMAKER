@@ -1,42 +1,40 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Youtube from "../api/youtube.jsx";
-
-export default function Home() {
-  const URL = "http://127.0.0.1:8080/api/"
-
+import { ServerBaseURL } from "../lib/constant/index.js";
+export default function Tmp() {
   const [message, setMessage] = useState("");
   useEffect(() => {
-    console.log(URL + "home")
-    fetch(URL + "home")
+    console.log(ServerBaseURL + "home");
+    fetch(ServerBaseURL + "home")
       .then((response) => response.json())
       .then((data) => setMessage(data.message));
-  }, [])
+  }, []);
 
-  const [input_data, setInputData] = useState("")
+  const [input_data, setInputData] = useState("");
   function handleEnter(e) {
     if (e.key === "Enter") {
-      setInputData(e.target.value)
-      fetch(URL + "user", {
+      setInputData(e.target.value);
+      fetch(ServerBaseURL + "user", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ "user_name": e.target.value })
-      })
+        body: JSON.stringify({ user_name: e.target.value }),
+      });
     }
   }
 
-  const [users_data, setUsersData] = useState([])
+  const [users_data, setUsersData] = useState([]);
   function handleClick() {
-    fetch(URL + "user", {
+    fetch(ServerBaseURL + "user", {
       method: "GET",
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     })
-    .then((response) => response.json())
-    .then((data) => setUsersData(data.users))
+      .then((response) => response.json())
+      .then((data) => setUsersData(data.users));
   }
 
   return (
@@ -50,9 +48,14 @@ export default function Home() {
       <br></br>
       <button onClick={handleClick}>このボタンで一覧を取得</button>
       <div>
-        Users data: {users_data.map((user, index) => <p key={index}>{user.user_name}</p>)}
+        Users data:{" "}
+        {users_data.map((user, index) => (
+          <p key={index}>{user.user_name}</p>
+        ))}
       </div>
-      <h1><br></br>以下Youtube</h1>
+      <h1>
+        <br></br>以下Youtube
+      </h1>
       <Youtube />
     </>
   );
