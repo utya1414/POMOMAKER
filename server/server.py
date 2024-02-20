@@ -1,15 +1,22 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, blueprints
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-# app instance
+# Flaskのインスタンスを作成
 app = Flask(__name__)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/dbname'
 # username、password、localhost、dbnameはそれぞれMySQLのユーザー名、パスワード、ホスト名、データベース名に置き換える
 
+# ブループリントをインポート
+from modules.user_handler import user_handle_app
+from modules.timer_handler import timer_handle_app
+app.register_blueprint(user_handle_app)
+app.register_blueprint(timer_handle_app)
+
+# SQLAlchemyのインスタンスを作成
 db = SQLAlchemy(app)
 
 # ユーザー情報クラスを作成
