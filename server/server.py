@@ -1,81 +1,35 @@
 from flask import Flask, jsonify, request, blueprints
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from modules.tables import db, PomodoroTimers
 
-# Flaskのインスタンスを作成
-app = Flask(__name__)
-CORS(app)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/dbname'
-# username、password、localhost、dbnameはそれぞれMySQLのユーザー名、パスワード、ホスト名、データベース名に置き換える
+def create_app():
+    # Flaskのインスタンスを作成
+    app = Flask(__name__)
+    CORS(app)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
+    # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/dbname'
+    # username、password、localhost、dbnameはそれぞれMySQLのユーザー名、パスワード、ホスト名、データベース名に置き換える
 
-# ブループリントをインポート
-from modules.user_handler import user_handle_app
-from modules.timer_handler import timer_handle_app
-app.register_blueprint(user_handle_app)
-app.register_blueprint(timer_handle_app)
+    db.init_app(app)
 
-# SQLAlchemyのインスタンスを作成
-db = SQLAlchemy(app)
+    with app.app_context():
+        db.create_all()
 
-# ユーザー情報クラスを作成
-class Users(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user_name = db.Column(db.String(30))
-    create_date = db.Column(db.String(30))
+    # modules下のブループリントを呼び出す
+    from modules.user_handler import user_handle_app
+    from modules.timer_handler import timer_handle_app
+    app.register_blueprint(user_handle_app)
+    app.register_blueprint(timer_handle_app)
 
-# ポモドーロタイマー情報クラスを作成
-class PomodoroTimers(db.Model):
-    pomo_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    title = db.Column(db.String(30))
-    maker_user_id = db.Column(db.Integer)
-    work_length = db.Column(db.Integer)
-    work_music = db.Column(db.String(30))
-    break_length = db.Column(db.Integer)
-    break_music = db.Column(db.String(30))
+    return app
 
-# 作業時間DB
-
-with app.app_context():
-    db.create_all()
+app = create_app()
 
 # 単にHello, World!を返却する
 # 引数:なし　返却値:'message': 'Hello, World
 @app.route('/api/home', methods=['GET'])
 def return_home():
     return jsonify({'message': 'Hello, World!'})
-
-# 受け取ったユーザ名をユーザー情報テーブルに登録する
-# 引数:'user_name'=ユーザ名　返却値:単なる文字列
-@app.route('/api/user', methods=['POST'])
-def insert_user():
-    user_data = request.get_json()
-    today = datetime.now()
-    user = Users(user_name=user_data['user_name'], create_date=today)
-    db.session.add(user)
-    db.session.commit()
-    return jsonify({'message': 'User added successfully'})
-
-# 受け取ったユーザ名をユーザー情報テーブルから削除する
-# 引数:'user_id'=ユーザID　返却値:単なる文字列
-@app.route('/api/user', methods=['DELETE'])
-def delete_user():
-    user_data = request.get_json()
-    user = Users.query.filter_by(user_id=user_data['user_id']).first()
-    db.session.delete(user)
-    db.session.commit()
-    return jsonify({'message': 'User deleted successfully'})
-
-# ユーザー情報テーブルの全データを取得する
-# 引数:なし　返却値:'users': user_id, user_name, create_dateのリスト
-@app.route('/api/user', methods=['GET'])
-def get_users():
-    users = Users.query.all()
-    user_list = []
-    for user in users:
-        user_list.append({'user_id': user.user_id, 'user_name': user.user_name, 'create_date': user.create_date})
-    return jsonify({'users': user_list})
 
 # 受け取ったポモドーロタイマーをポモドーロタイマーテーブルに登録する
 # 引数:'title', 'maker_user_id', 'work_length', 'work_music', 'break_length', 'break_music'　返却値:単なる文字列
