@@ -9,7 +9,7 @@ c = conn.cursor()               # カーソルオブジェクトを作成
 
 # Userテーブルを作成するSQLクエリ
 create_table_query1 = """
-CREATE TABLE IF NOT EXISTS user (
+CREATE TABLE IF NOT EXISTS users (
     USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
     USER_NAME TEXT NOT NULL,
     CREATE_DATE TEXT NOT NULL
@@ -19,7 +19,7 @@ c.execute(create_table_query1)
 
 # PomodoroTimerテーブルを作成するSQLクエリ
 create_table_query2 = """
-CREATE TABLE IF NOT EXISTS pomodoro_timer (
+CREATE TABLE IF NOT EXISTS pomodoro_timers (
     POMO_ID INTEGER PRIMARY KEY AUTOINCREMENT,
     TITLE TEXT NOT NULL,
     MAKER_USERID INTEGER NOT NULL,
@@ -33,7 +33,7 @@ c.execute(create_table_query2)
 
 # ユーザーデータを挿入するためのSQLクエリとデータ
 insert_user_query = """
-INSERT INTO user (USER_NAME, CREATE_DATE)
+INSERT INTO users (USER_NAME, CREATE_DATE)
 VALUES (?, ?)
 """
 user_data = [
@@ -47,7 +47,7 @@ c.executemany(insert_user_query, user_data) # ユーザーデータを挿入
 
 # ポモドーロタイマーデータを挿入するためのSQLクエリとデータ
 insert_pomodoro_timer_query = """
-INSERT INTO pomodoro_timer (TITLE, MAKER_USERID, WORK_LENGTH, WORK_MUSIC, BREAK_LENGTH, BREAK_MUSIC)
+INSERT INTO pomodoro_timers (TITLE, MAKER_USERID, WORK_LENGTH, WORK_MUSIC, BREAK_LENGTH, BREAK_MUSIC)
 VALUES (?, ?, ?, ?, ?, ?)
 """
 pomodoro_timer_data = [
