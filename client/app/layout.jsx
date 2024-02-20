@@ -1,5 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { AppLogo, Footer, Sidebar } from "@/lib/components/layouts";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -11,7 +12,16 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div>{children}</div>
+        <div className="flex flex-col min-h-screen min-w-full bg-background max-h-screen">
+          <div className="my-4 text-4xl font-sans flex justify-center items-center">
+            <AppLogo />
+          </div>
+          <div className="flex w-full flex-grow">
+            <Sidebar />
+            <main className="flex w-full flex-grow">{children}</main>
+          </div>
+          <Footer />
+        </div>
       </body>
     </html>
   );
