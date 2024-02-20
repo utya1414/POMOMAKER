@@ -19,6 +19,10 @@ class PomodoroTimers(db.Model):
     break_length = db.Column(db.Integer)
     break_music = db.Column(db.String(30))
 
-# 作業時間DB
-
-
+# 作業時間情報クラスを作成
+class WorkTimes(db.Model):
+    work_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer)
+    work_length = db.Column(db.Integer)
+    start_time = db.Column(db.String(30))
+    end_time = db.Column(db.String(30))

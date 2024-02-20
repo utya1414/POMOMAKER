@@ -18,8 +18,10 @@ def create_app():
     # modules下のブループリントを呼び出す
     from modules.user_handler import user_handle_app
     from modules.timer_handler import timer_handle_app
+    from modules.work_time_handler import work_time_handle_app
     app.register_blueprint(user_handle_app)
     app.register_blueprint(timer_handle_app)
+    app.register_blueprint(work_time_handle_app)
 
     return app
 
