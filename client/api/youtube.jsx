@@ -1,3 +1,4 @@
+"use client";
 import React, { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player';
 import CookieConsent from './cookies_consent';
@@ -5,6 +6,7 @@ import CookieConsent from './cookies_consent';
 const Example = () => {
   const [operations, setOperations] = useState([]);
   const [isClient, setIsClient] = useState(false);
+  const [playing, setPlaying] = useState(false);
   const playerRef = useRef(null);
 
   useEffect(() => {
@@ -18,6 +20,7 @@ const Example = () => {
     console.log('handlePlay');
     if (playerRef.current) {
       playerRef.current.seekTo(0);
+      setPlaying(true);
     }
   }
   const handleDownload = () => {
@@ -32,14 +35,15 @@ const Example = () => {
           url="https://www.youtube-nocookie.com/embed/9w1KP2364vo"
           controls={true}
           ref={playerRef}
+          playing={playing}
           onReady={() => addOperation('ready')}
           onStart={() => addOperation('start')}
           onPlay={() => addOperation('play')}
           onPause={() => addOperation('pause')}
           onEnded={() => addOperation('end')}
           onError={() => addOperation('error')}
-          width="300px"
-          height="300px"
+          width="0px"
+          height="0px"
         />
       )}
       <div>{operations.map((ope) => {
@@ -49,7 +53,7 @@ const Example = () => {
           </li>
         )
       })}</div>
-      <button onClick={handlePlay}>自作した再生ボタン</button>
+      <button onClick={handlePlay}>自作した再生ボタン（始めから再生）</button>
       <br></br>
       <button onClick={handleDownload}>download(コピペしたのにあったやつ)</button>
     </div>
