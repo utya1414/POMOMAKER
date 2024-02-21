@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -145,12 +145,10 @@ const CreateTimerForm = ({ setOpen }) => {
       isPublic: false,
     },
   });
-  // useEffect(() => {
-  //   console.log(form);
-  // }, []);
 
   const onSubmit = (data) => {
     console.log(data);
+    GetFormCardStats();
     setOpen(false);
     toast({
       status: "success",
