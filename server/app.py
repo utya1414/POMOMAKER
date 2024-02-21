@@ -6,9 +6,8 @@ def create_app():
     # Flaskのインスタンスを作成
     app = Flask(__name__)
     CORS(app)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
-    # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/dbname'
-    # username、password、localhost、dbnameはそれぞれMySQLのユーザー名、パスワード、ホスト名、データベース名に置き換える
+
+    app.config.from_object('config.DevelopmentConfig')
 
     db.init_app(app)
 
@@ -29,10 +28,7 @@ app = create_app()
 
 # 単にHello, World!を返却する
 # 引数:なし　返却値:'message': 'Hello, World
-@app.route('/api/home', methods=['GET'])
+@app.route('/', methods=['GET'])
 def return_home():
     return jsonify({'message': 'Hello, World!'})
 
-# サーバーの起動
-if __name__ == '__main__':
-    app.run(debug=True, port=8080)
