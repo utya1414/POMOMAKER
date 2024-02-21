@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { AppLogo, Footer, Sidebar } from "@/lib/components/layouts";
 import { ThemeProvider } from "@/lib/components/providers/ThemeProvider";
+import { Toaster } from "@/lib/components/shadcn-ui/Toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,6 +31,7 @@ export default function RootLayout({ children }) {
             </div>
             <Footer />
           </div>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

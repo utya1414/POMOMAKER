@@ -1,7 +1,14 @@
 import React from "react";
+import Menubar from "@/lib/components/Menubar";
+import TimerList from "@/lib/components/TimerList";
 
 const Home = () => {
-  return <div>Home</div>;
+  return (
+    <div>
+      <Menubar />
+      <TimerList />
+    </div>
+  );
 };
 
 export default Home;
