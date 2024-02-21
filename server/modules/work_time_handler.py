@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
-from modules.tables import db, WorkTimes
+from database import db
+from modules.models import WorkTimes
 from datetime import datetime
 
 work_time_handle_app = Blueprint('work_time', __name__)

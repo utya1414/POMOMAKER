@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
-from modules.tables import db, Users
+from database import db
+from modules.models import Users
 from datetime import datetime
 
 user_handle_app = Blueprint('index', __name__) # ブループリントの作成

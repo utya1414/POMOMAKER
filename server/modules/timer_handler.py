@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
-from modules.tables import db, PomodoroTimers
+from database import db
+from modules.models import PomodoroTimers
 
 timer_handle_app = Blueprint('timer', __name__)
 
