@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -28,6 +28,7 @@ import { Switch } from "./shadcn-ui/switch";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
+import { useToast } from "./shadcn-ui/use-toast";
 
 // zod による form のバリデーション
 const formSchema = z.object({
@@ -113,8 +114,9 @@ const Menubar = () => {
 };
 
 const CreateTimerButtonDialog = () => {
+  const [open, setOpen] = useState(false);
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="bg-black text-white  text-2xl py-2 px-4 rounded-md">
         新規作成
       </DialogTrigger>
@@ -122,13 +124,14 @@ const CreateTimerButtonDialog = () => {
         <DialogHeader>
           <DialogTitle>ポモドーロタイマー作成画面</DialogTitle>
         </DialogHeader>
-        <CreateTimerForm />
+        <CreateTimerForm setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
 };
 
-const CreateTimerForm = () => {
+const CreateTimerForm = ({ setOpen }) => {
+  const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -148,6 +151,18 @@ const CreateTimerForm = () => {
 
   const onSubmit = (data) => {
     console.log(data);
+    setOpen(false);
+    toast({
+      status: "success",
+      description: (
+        <>
+          <p className="text-green-500 font-bold">タイマーを作成しました</p>
+          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          </pre>
+        </>
+      ),
+    });
   };
 
   return (
@@ -165,7 +180,7 @@ const CreateTimerForm = () => {
         </div>
         <InputForm form={form} {...formProps.rounds} />
         <SwitchForm form={form} {...formProps.isPublic} />
-        <Button type="submit">Submit</Button>
+        <Button type="submit">作成</Button>
       </form>
     </Form>
   );
