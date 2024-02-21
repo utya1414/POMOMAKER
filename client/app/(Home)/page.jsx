@@ -4,7 +4,7 @@ import TimerList from "@/lib/components/TimerList";
 
 const Home = () => {
   return (
-    <div>
+    <div className="w-full">
       <Menubar />
       <TimerList />
     </div>
