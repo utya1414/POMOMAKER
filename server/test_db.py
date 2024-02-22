@@ -91,3 +91,14 @@ c.executemany(insert_work_time_query, work_time_data) # 作業時間データを
 conn.commit()
 conn.close()
 print("データベース及びテーブルの作成が完了しました")
+
+# {
+#   "timer_name": "test_api_timer",
+#   "timer_description": "test",
+#   "work_length": 25,
+#   "break_length": 5,
+#   "rounds": 4,
+#   "work_sound_source": "",
+#   "break_sound_source": "",
+#   "isPublic": false
+# }
