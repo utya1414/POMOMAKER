@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_user, logout_user, login_required, current_user
+from flask_login import login_user, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from modules.tables import db, Users
 from datetime import datetime
@@ -31,7 +31,8 @@ def signup_post():
     )
     db.session.add(new_user)
     db.session.commit()
-    return jsonify({'message': 'New user created!'})
+    login_user(new_user, remember=True) # サインアップ成功時はログインもする
+    return jsonify({'message': 'User created successfully'})
 
 # ログイン機能
 # 引数: 'email', 'password', 'remember'　返却値: 'message': 成功文 or emailエラー文 or passwordエラー文
@@ -40,25 +41,26 @@ def login_post():
     user_data = request.get_json()
     email = user_data['email']
     password = user_data['password']
-    remember = user_data['remember']
 
+    # email（ユニーク）とpasswordが一致するユーザーが存在するか確認
     user = Users.query.filter_by(email=email).first()
-
     if not user:
         return jsonify({'message': 'Email address not found'})
     if not check_password_hash(user.password, password):
         return jsonify({'message': 'Password incorrect'})
-        
-    login_user(user, remember=remember)
+    
+    login_user(user, remember=True) # ブラウザを閉じてもログイン状態を保持する
     return jsonify({'message': 'Logged in successfully'})
 
 # ログアウト機能
-# 引数: なし　返却値: 'message': 成功文
-@user_handle_app.route('/api/logout')
-@login_required
+# 引数: なし　返却値: 'message': 成功文 or 未ログイン文
+@user_handle_app.route('/api/logout', methods=['POST'])
 def logout():
-    logout_user()
-    return jsonify({'message': 'Logged out successfully'})
+    if current_user.is_authenticated:
+        logout_user()
+        return jsonify({'message': 'Logged out successfully'})
+    else:
+        return jsonify({'message': 'not logged in'})
 
 # ログインしているユーザにのみ、user情報を返却する
 # 引数: なし　返却値: 'user_id', 'email', 'user_name', 'description', 'created_at', 'updated_at'
