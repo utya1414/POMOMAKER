@@ -69,7 +69,7 @@ def logout():
     else:
         return jsonify({'message': 'not logged in'})
 
-# ログインしているユーザにのみ、user情報を返却する
+# ログインしているユーザにのみ、ユーザー情報を返却する
 # 引数: なし　返却値: 'user_id', 'email', 'user_name', 'description', 'created_at', 'updated_at'
 # (返却値の続き) or 'message': 未ログイン文 or 'message': ユーザ一致無し文
 @user_handle_app.route('/api/get_user_info', methods=['GET'])
@@ -92,7 +92,7 @@ def get_user_info():
     else:
         return jsonify({'message': 'not logged in'})
 
-# user情報を更新する
+# ユーザー情報を更新する
 # 引数: 'email', 'password', 'user_name', 'description'　返却値: 'message': 成功文 or 未ログイン文 
 # (返却値の続き) or 必須項目未入力文 or 文字数制限超過文 or ユーザ一致無し文
 @user_handle_app.route('/api/update_user_info', methods=['PATCH'])
