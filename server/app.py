@@ -1,7 +1,6 @@
 from flask import Flask, jsonify, request, blueprints
 from flask_cors import CORS
 from database import init_db
-
 def create_app():
     # Flaskのインスタンスを作成
     app = Flask(__name__)
@@ -9,7 +8,7 @@ def create_app():
 
     app.config.from_object('config.DevelopmentConfig')
 
-    init_db(app)
+    init_db(app)    
 
     # modules下のブループリントを呼び出す
     from modules.user_handler import user_handle_app

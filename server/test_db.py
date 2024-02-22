@@ -102,3 +102,5 @@ print("データベース及びテーブルの作成が完了しました")
 #   "break_sound_source": "",
 #   "isPublic": false
 # }
+
+# insert into pomodoro_timers (timer_name, timer_description, work_length, break_length, rounds, work_sound_source, break_sound_source, isPublic) values ('test_api_timer', 'test', 25, 5, 4, '', '', false);

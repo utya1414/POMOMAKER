@@ -11,8 +11,8 @@ class Users(db.Model):
 class PomodoroTimers(db.Model):
       __tablename__ = 'pomodoro_timers'
       timer_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-      user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False),
-      timer_name = db.Column(db.String(50), primary_key=True, nullable=False)
+      user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+      timer_name = db.Column(db.String(50), nullable=False)
       timer_description = db.Column(db.String(200))
       work_length = db.Column(db.Integer, nullable=False)
       break_length = db.Column(db.Integer, nullable=False)

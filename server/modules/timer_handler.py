@@ -56,7 +56,7 @@ def get_all_timers():
 
 # ポモドーロタイマーテーブルで指定したユーザーIDのデータを取得する
 # 引数:'user_id'=ユーザID　返却値:'pomodoro_timers': pomo_id, title, maker_user_id, work_length, work_music, break_length, break_musicのリスト
-@timer_handle_app.route('/api/timer/user', methods=['GET'])
+@timer_handle_app.route('/api/timer/<int:id>', methods=['GET'])
 def get_timers_by_id():
     user_id = request.args.get('user_id')
     pomodoro_timers = PomodoroTimers.query.filter_by(maker_user_id=user_id).all()
