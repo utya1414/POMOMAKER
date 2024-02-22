@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request, blueprints
 from flask_cors import CORS
 from flask_login import LoginManager
+from flask_migrate import Migrate
 from modules.tables import db, Users
 
 def create_app():
@@ -15,7 +16,7 @@ def create_app():
     app.secret_key = 'your-secret-key' # セッション管理のための秘密鍵(鬼の直書き)
     
     db.init_app(app)
-
+    migrate = Migrate(app, db)
     with app.app_context():
         db.create_all()
 
