@@ -35,7 +35,7 @@ def signup_post():
     return jsonify({'message': 'User created successfully'})
 
 # ログイン機能
-# 引数: 'email', 'password', 'remember'　返却値: 'message': 成功文 or emailエラー文 or passwordエラー文
+# 引数: 'email', 'password', 'remember'　返却値: 'message': 成功文 or emailエラー文 or passwordエラー文 or ログイン済み文
 @user_handle_app.route('/api/login', methods=['POST'])
 def login_post():
     user_data = request.get_json()
@@ -48,6 +48,10 @@ def login_post():
         return jsonify({'message': 'Email address not found'})
     if not check_password_hash(user.password, password):
         return jsonify({'message': 'Password incorrect'})
+    
+    # 既にログインしている場合はログイン済みのメッセージを返す
+    if current_user.is_authenticated:
+        return jsonify({'message': 'Already logged in'})
     
     login_user(user, remember=True) # ブラウザを閉じてもログイン状態を保持する
     return jsonify({'message': 'Logged in successfully'})
@@ -88,7 +92,7 @@ def get_user_info():
 # user情報を更新する
 # 引数: 'email', 'password', 'user_name', 'description'　返却値: 'message': 成功文 or 未ログイン文 
 # (返却値の続き) or 必須項目未入力文 or 文字数制限超過文 or ユーザ一致無し文
-@user_handle_app.route('/api/update_user_info', methods=['POST'])
+@user_handle_app.route('/api/update_user_info', methods=['PATCH'])
 def update_user_info():
     if current_user.is_authenticated:
         user_data = request.get_json()
@@ -105,6 +109,11 @@ def update_user_info():
         # 文字数の制限を超えた場合はエラーメッセージを返す
         if len(email) > 50 or len(password) > 50 or len(user_name) > 50 or len(description) > 200:
             return jsonify({'message': 'string length over'})
+        
+        # 新しく設定しようとしているemailが既存のemailと重複していないか確認
+        user = Users.query.filter_by(email=email).first()
+        if user and user.user_id != user_id:
+            return jsonify({'message': 'Email address already exists'})
         
         # ユーザー情報を取得
         user = Users.query.filter_by(user_id=user_id).first()
@@ -124,7 +133,7 @@ def update_user_info():
 
 # ユーザー情報を削除する
 # 引数: なし　返却値: 'message': 成功文 or 未ログイン文 or ユーザ一致無し文
-@user_handle_app.route('/api/delete_user', methods=['POST'])
+@user_handle_app.route('/api/delete_user', methods=['DELETE'])
 def delete_user():
     if current_user.is_authenticated:
         user_id = current_user.user_id
