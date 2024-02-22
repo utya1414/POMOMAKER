@@ -60,8 +60,79 @@ def logout():
     logout_user()
     return jsonify({'message': 'Logged out successfully'})
 
-# ログインしていれば、"user_id"を返す
-@user_handle_app.route('/api/get_user_id', methods=['GET'])
-@login_required
-def get_user_id():
-    return jsonify({'user_id': current_user.user_id})
+# ログインしているユーザにのみ、user情報を返却する
+# 引数: なし　返却値: 'user_id', 'email', 'user_name', 'description', 'created_at', 'updated_at'
+# (返却値の続き) or 'message': 未ログイン文 or 'message': ユーザ一致無し文
+@user_handle_app.route('/api/get_user_info', methods=['GET'])
+def get_user_info():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        # ユーザー情報を取得
+        user = Users.query.filter_by(user_id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'})
+        return jsonify({
+            'user_id': user.user_id,
+            'email': user.email,
+            # 'password' は返却しない
+            'user_name': user.user_name,
+            'description': user.description,
+            'created_at': user.created_at,
+            'updated_at': user.updated_at
+        })
+    else:
+        return jsonify({'message': 'not logged in'})
+
+# user情報を更新する
+# 引数: 'email', 'password', 'user_name', 'description'　返却値: 'message': 成功文 or 未ログイン文 
+# (返却値の続き) or 必須項目未入力文 or 文字数制限超過文 or ユーザ一致無し文
+@user_handle_app.route('/api/update_user_info', methods=['POST'])
+def update_user_info():
+    if current_user.is_authenticated:
+        user_data = request.get_json()
+        user_id = current_user.user_id
+        email = user_data['email']
+        password = user_data['password']
+        user_name = user_data['user_name']
+        description = user_data['description']
+        updated_at = datetime.now()
+        
+        # nullable=falseの要素がnullだった場合はエラーメッセージを返す
+        if email == '' or password == '' or user_name == '':
+            return jsonify({'message': 'Please fill in all required fields'})
+        # 文字数の制限を超えた場合はエラーメッセージを返す
+        if len(email) > 50 or len(password) > 50 or len(user_name) > 50 or len(description) > 200:
+            return jsonify({'message': 'string length over'})
+        
+        # ユーザー情報を取得
+        user = Users.query.filter_by(user_id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'})
+
+        # ユーザー情報を更新
+        user.email = email
+        user.password = generate_password_hash(password, method='pbkdf2:sha256')
+        user.user_name = user_name
+        user.description = description
+        user.updated_at = updated_at
+        db.session.commit()
+        return jsonify({'message': 'User info updated successfully'})
+    else:
+        return jsonify({'message': 'not logged in'})
+
+# ユーザー情報を削除する
+# 引数: なし　返却値: 'message': 成功文 or 未ログイン文 or ユーザ一致無し文
+@user_handle_app.route('/api/delete_user', methods=['POST'])
+def delete_user():
+    if current_user.is_authenticated:
+        user_id = current_user.user_id
+        # ユーザー情報を取得
+        user = Users.query.filter_by(user_id=user_id).first()
+        if not user:
+            return jsonify({'message': 'User not found'})
+        db.session.delete(user)
+        db.session.commit()
+        logout_user() # ユーザー情報を削除したらログアウトもする
+        return jsonify({'message': 'User deleted successfully'})
+    else:
+        return jsonify({'message': 'not logged in'})
