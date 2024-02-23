@@ -24,6 +24,7 @@ import { Textarea } from "./shadcn-ui/textarea";
 import { Slider } from "./shadcn-ui/slider";
 import { Button } from "./shadcn-ui/button";
 import { Switch } from "./shadcn-ui/switch";
+import { Separator } from "./shadcn-ui/separator";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -108,9 +109,15 @@ const formProps = {
 
 const Menubar = () => {
   return (
-    <div>
-      <CreateTimerButtonDialog />
-    </div>
+    <>
+      <nav className="flex justify-between py-3 px-12">
+        <p></p>
+        <div className="">
+          <CreateTimerButtonDialog />
+        </div>
+      </nav>
+      <Separator />
+    </>
   );
 };
 
@@ -118,8 +125,10 @@ const CreateTimerButtonDialog = () => {
   const [open, setOpen] = useState(false);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-black text-white  text-2xl py-2 px-4 rounded-md">
-        新規作成
+      <DialogTrigger asChild>
+        <Button variant="outline" className="font-semibold">
+          新規作成
+        </Button>
       </DialogTrigger>
       <DialogContent className="">
         <DialogHeader>

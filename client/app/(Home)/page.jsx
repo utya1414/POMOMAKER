@@ -1,6 +1,6 @@
 import React from "react";
-import Menubar from "@/lib/components/Menubar";
 import TimerList from "@/lib/components/timer/TimerList";
+import Menubar from "@/lib/components/Menubar";
 
 const Home = () => {
   return (

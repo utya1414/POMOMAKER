@@ -3,7 +3,8 @@ import "./globals.css";
 import { AppLogo, Footer, Sidebar } from "@/lib/components/layouts";
 import { ThemeProvider } from "@/lib/components/providers/ThemeProvider";
 import { Toaster } from "@/lib/components/shadcn-ui/Toaster";
-
+import { Separator } from "@/lib/components/shadcn-ui/Separator";
+import Menubar from "@/lib/components/Menubar";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -25,10 +26,12 @@ export default function RootLayout({ children }) {
             <div className="my-4 text-4xl font-sans flex justify-center items-center">
               <AppLogo />
             </div>
+            <Separator />
             <div className="flex w-full flex-grow">
               <Sidebar />
               <main className="flex w-full flex-grow">{children}</main>
             </div>
+            <Separator />
             <Footer />
           </div>
           <Toaster />
