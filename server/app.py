@@ -11,7 +11,7 @@ def create_app():
 
     app.config.from_object('config.DevelopmentConfig')
 
-    init_db(app)
+    init_db(app)    
 
     # セッション管理のための設定
     login_manager = LoginManager()

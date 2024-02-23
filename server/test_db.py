@@ -91,3 +91,16 @@ c.executemany(insert_work_time_query, work_time_data) # 作業時間データを
 conn.commit()
 conn.close()
 print("データベース及びテーブルの作成が完了しました")
+
+# {
+#   "timer_name": "test_api_timer",
+#   "timer_description": "test",
+#   "work_length": 25,
+#   "break_length": 5,
+#   "rounds": 4,
+#   "work_sound_source": "",
+#   "break_sound_source": "",
+#   "isPublic": false
+# }
+
+# insert into pomodoro_timers (timer_name, timer_description, work_length, break_length, rounds, work_sound_source, break_sound_source, isPublic) values ('test_api_timer', 'test', 25, 5, 4, '', '', false);

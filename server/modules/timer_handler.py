@@ -1,69 +1,102 @@
 from flask import Blueprint, jsonify, request
 from database import db
-from modules.models import PomodoroTimers
-
+from modules.models import Timers
+from flask_login import current_user
 timer_handle_app = Blueprint('timer', __name__)
 
-# 受け取ったポモドーロタイマーをポモドーロタイマーテーブルに登録する
-# 引数:'title', 'maker_user_id', 'work_length', 'work_music', 'break_length', 'break_music'　返却値:単なる文字列
-@timer_handle_app.route('/api/pomodoro_timer', methods=['POST'])
-def insert_pomodoro_timer():
-    pomodoro_data = request.get_json()
-    pomodoro_timer = PomodoroTimers(
-        title=pomodoro_data['title'],
-        maker_user_id=pomodoro_data['maker_user_id'],
-        work_length=pomodoro_data['work_length'],
-        work_music=pomodoro_data['work_music'],
-        break_length=pomodoro_data['break_length'],
-        break_music=pomodoro_data['break_music']
+# request_body: { 
+#         "timer_id": timer_id,
+#         "timer_name": timer_name,
+#         "timer_description": timer_description,
+#         "work_length": work_length,
+#         "break_length": break_length,
+#         "rounds": rounds,
+#         "work_sound_source": work_sound_source,
+#         "break_sound_source": break_sound_source,
+#         "isPublic": isPublic 
+#       }
+@timer_handle_app.route('/api/timer', methods=['POST'])
+def insert_timer():
+    data = request.get_json()
+    if data['isPublic'] == 'true':
+        data['isPublic'] = True
+    else:
+        data['isPublic'] = False
+    
+    timer = Timers(
+      user_id = current_user.user_id,
+      timer_name = data['timer_name'],
+      timer_description = data['timer_description'],
+      work_length = data['work_length'],
+      break_length = data['break_length'],
+      rounds = data['rounds'],
+      work_sound_source = data['work_sound_source'],
+      break_sound_source = data['break_sound_source'],
+      isPublic = data['isPublic']
     )
-    db.session.add(pomodoro_timer)
+    db.session.add(timer)
     db.session.commit()
-    return jsonify({'message': 'Pomodoro Timer added successfully'})
+    return jsonify({
+        "status": "success",
+        'message': 'Pomodoro Timer added successfully'})
 
-# 受け取ったポモドーロタイマーをポモドーロタイマーテーブルから削除する
-# 引数:'pomo_id'=ポモドーロタイマーID　返却値:単なる文字列
-@timer_handle_app.route('/api/pomodoro_timer', methods=['DELETE'])
-def delete_pomodoro_timer():
-    pomodoro_data = request.get_json()
-    pomodoro_timer = PomodoroTimers.query.filter_by(pomo_id=pomodoro_data['pomo_id']).first()
-    db.session.delete(pomodoro_timer)
+@timer_handle_app.route('/api/timer/<int:id>', methods=['DELETE'])
+def delete_timer(id):
+    timer = Timers.query.filter_by(timer_id=id).first()
+    db.session.delete(timer)
     db.session.commit()
-    return jsonify({'message': 'Pomodoro Timer deleted successfully'})
+    return jsonify({
+        "status": "success",
+        'message': 'Pomodoro Timer deleted successfully'})
 
-# ポモドーロタイマーテーブルの全データを取得する
-# 引数:なし　返却値:'pomodoro_timers': pomo_id, title, maker_user_id, work_length, work_music, break_length, break_musicのリスト
-@timer_handle_app.route('/api/pomodoro_timer', methods=['GET'])
-def get_pomodoro_timers():
-    pomodoro_timers = PomodoroTimers.query.all()
-    pomodoro_timer_list = []
-    for pomodoro_timer in pomodoro_timers:
-        pomodoro_timer_list.append({
-            'pomo_id': pomodoro_timer.pomo_id,
-            'title': pomodoro_timer.title,
-            'maker_user_id': pomodoro_timer.maker_user_id,
-            'work_length': pomodoro_timer.work_length,
-            'work_music': pomodoro_timer.work_music,
-            'break_length': pomodoro_timer.break_length,
-            'break_music': pomodoro_timer.break_music
+# response: { timer_info1, timer_info2, ...}
+@timer_handle_app.route('/api/timer', methods=['GET'])
+def get_all_timers():
+    timers = Timers.query.all()
+    timer_list = []
+    for timer in timers:
+        timer_list.append({
+            'timer_id': timer.timer_id,
+            'user_id': timer.user_id,
+            'timer_name': timer.timer_name,
+            'timer_description': timer.timer_description,
+            'work_length': timer.work_length,
+            'break_length': timer.break_length,
+            'rounds': timer.rounds,
+            'work_sound_source': timer.work_sound_source,
+            'break_sound_source': timer.break_sound_source,
+            'isPublic': timer.isPublic
         })
-    return jsonify({'pomodoro_timers': pomodoro_timer_list})
+    return jsonify({
+        "status": "success",
+        "message": "Pomodoro Timers fetched all successfully",
+        "data": {
+            "timers": timer_list
+        }
+    })
 
-# ポモドーロタイマーテーブルで指定したユーザーIDのデータを取得する
-# 引数:'user_id'=ユーザID　返却値:'pomodoro_timers': pomo_id, title, maker_user_id, work_length, work_music, break_length, break_musicのリスト
-@timer_handle_app.route('/api/pomodoro_timer/user', methods=['GET'])
-def get_pomodoro_timers_by_user():
-    user_id = request.args.get('user_id')
-    pomodoro_timers = PomodoroTimers.query.filter_by(maker_user_id=user_id).all()
-    pomodoro_timer_list = []
-    for pomodoro_timer in pomodoro_timers:
-        pomodoro_timer_list.append({
-            'pomo_id': pomodoro_timer.pomo_id,
-            'title': pomodoro_timer.title,
-            'maker_user_id': pomodoro_timer.maker_user_id,
-            'work_length': pomodoro_timer.work_length,
-            'work_music': pomodoro_timer.work_music,
-            'break_length': pomodoro_timer.break_length,
-            'break_music': pomodoro_timer.break_music
+@timer_handle_app.route('/api/timer/<int:id>', methods=['GET'])
+def get_timer_by_id(id):
+    timer = Timers.query.filter_by(timer_id=id).first()
+    if not timer:
+        return jsonify({'message': 'Timer not found'})
+    return jsonify(
+        {
+            "status": "success",
+            "message": "Pomodoro Timer fetched successfully",
+            "data": {
+                "timer": {
+                    'timer_id': timer.timer_id,
+                    'user_id': timer.user_id,
+                    'timer_name': timer.timer_name,
+                    'timer_description': timer.timer_description,
+                    'work_length': timer.work_length,
+                    'break_length': timer.break_length,
+                    'rounds': timer.rounds,
+                    'work_sound_source': timer.work_sound_source,
+                    'break_sound_source': timer.break_sound_source,
+                    'isPublic': timer.isPublic
+                
+                }
+            }
         })
-    return jsonify({'pomodoro_timers': pomodoro_timer_list})
