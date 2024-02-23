@@ -34,3 +34,16 @@ export const GetTimerCardStats = async () => {
     throw new Error("Error fetching timer stats");
   return response.data;
 };
+
+export const EditTimer = async (data) => {
+  const response = await fetch(ServerBaseURL + "timer", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  }).then((response) => response.json());
+
+  if (response.status === "failed") throw new Error("Failed to edit timer");
+  if (response.status === "error") throw new Error("Error editing timer");
+};

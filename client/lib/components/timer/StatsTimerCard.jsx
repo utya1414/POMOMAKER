@@ -10,6 +10,8 @@ import {
 import { Skeleton } from "../shadcn-ui/skeleton";
 import { Label } from "../shadcn-ui/label";
 
+import EditTimerBtn from "./EditTimerBtn";
+
 const StatsTimerCard = (props) => {
   const { loading, timer_info } = props;
   if (loading || timer_info === undefined) {
@@ -38,13 +40,13 @@ const StatsTimerCard = (props) => {
   return (
     <Card className="min-w-full">
       <CardContent>
-        <Label>{timer_name}</Label>
-        <div className="flex space-x-1">
-          <p>{work_length}分</p>
-          <p>{break_length}分</p>
-          <p>{rounds}回</p>
+        <h1 className="text-2xl font-extrabold mt-6 mb-1">{timer_name}</h1>
+        <div className="flex space-x-1 text-muted-foreground">
+          <p>作業時間 {work_length}分</p>
+          <p>休憩時間 {break_length}分</p>
+          <p>ラウンド数 {rounds}回</p>
         </div>
-        <p>{work_sound_source}</p>
+        <EditTimerBtn />
       </CardContent>
     </Card>
   );
