@@ -13,7 +13,7 @@ import { Button } from "./shadcn-ui/button";
 import { IoCreateOutline } from "react-icons/io5";
 import CreateTimerForm from "./timer/CreateTimerForm";
 
-const Menubar = () => {
+const TopMenubar = () => {
   return (
     <>
       <nav className="flex justify-between py-3 px-12">
@@ -47,4 +47,4 @@ const CreateTimerButtonDialog = () => {
   );
 };
 
-export default Menubar;
+export default TopMenubar;

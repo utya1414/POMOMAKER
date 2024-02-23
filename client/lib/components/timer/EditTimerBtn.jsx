@@ -110,7 +110,7 @@ const EditTimerBtn = ({ timer_id }) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="font-semibold space-x-2">
+        <Button variant="outline" className="font-semibold space-x-2 w-24 h-12">
           <BiEditAlt />
           <span>編集</span>
         </Button>

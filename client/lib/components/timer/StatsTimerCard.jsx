@@ -1,11 +1,15 @@
 "use client";
 import { Card, CardContent } from "../shadcn-ui/card";
 import { Skeleton } from "../shadcn-ui/skeleton";
+import { Button } from "../shadcn-ui/button";
 
 import EditTimerBtn from "./EditTimerBtn";
 import DeleteTimerBtn from "./DeleteTimerBtn";
 
+import { useRouter } from "next/navigation";
+
 const StatsTimerCard = (props) => {
+  const router = useRouter();
   const { loading, timer_info } = props;
   if (loading || timer_info === undefined) {
     return (
@@ -29,9 +33,11 @@ const StatsTimerCard = (props) => {
     break_sound_source,
     isPublic,
   } = timer_info;
-
+  const onClickHandler = () => {
+    router.push(`/timer/${timer_id}`);
+  };
   return (
-    <Card className="min-w-full">
+    <Card className="min-w-full hover:bg-muted" onClick={onClickHandler}>
       <CardContent className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-extrabold mt-6 mb-1">{timer_name}</h1>
@@ -41,7 +47,7 @@ const StatsTimerCard = (props) => {
             <p>ラウンド数 {rounds}回</p>
           </div>
         </div>
-        <div className="mt-6">
+        <div className="mt-6 flex space-x-2">
           <EditTimerBtn timer_id={timer_id} />
           <DeleteTimerBtn timer_id={timer_id} />
         </div>

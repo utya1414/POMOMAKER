@@ -1,11 +1,11 @@
 import React from "react";
 import TimerList from "@/lib/components/timer/TimerList";
-import Menubar from "@/lib/components/Menubar";
+import TopMenubar from "@/lib/components/TopMenubar";
 
 const Home = () => {
   return (
     <div className="w-full">
-      <Menubar />
+      <TopMenubar />
       <TimerList />
     </div>
   );

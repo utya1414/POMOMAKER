@@ -14,9 +14,16 @@ export const CreateTimer = async (data) => {
   if (response.status === "error") throw new Error("Error creating timer");
 };
 
-export const GetTimers = async (timer_id) => {
-  const response = await fetch(ServerBaseURL + "timer/" + timer_id);
-  return response.json();
+export const GetTimerCardStatsById = async (timer_id) => {
+  const response = await fetch(ServerBaseURL + "timer/" + timer_id, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+  if (response.status === "failed") throw new Error("Failed to fetch timer");
+  if (response.status === "error") throw new Error("Error fetching timer");
+  return response.data.timer;
 };
 
 export const GetTimerCardStats = async () => {
