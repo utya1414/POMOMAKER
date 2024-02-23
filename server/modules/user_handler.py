@@ -150,3 +150,9 @@ def delete_user():
         return jsonify({'message': 'User deleted successfully'})
     else:
         return jsonify({'message': 'not logged in'})
+
+# アクセスしたユーザーがログインしているかどうかをTrue or Falseで返却する
+# 引数: なし　返却値: 'is_authenticated': True or False
+@user_handle_app.route('/api/is_authenticated', methods=['GET'])
+def is_authenticated():
+    return jsonify({'is_authenticated': current_user.is_authenticated})

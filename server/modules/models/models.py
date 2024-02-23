@@ -1,11 +1,19 @@
 from database import db
+from flask_login import UserMixin
 
-# ユーザー情報クラスを作成my
-class Users(db.Model):
+# ユーザー情報クラスを作成
+class Users(db.Model, UserMixin):
     __tablename__ = 'users'
     user_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    email = db.Column(db.String(50), unique=True)
+    password = db.Column(db.String(200))
     user_name = db.Column(db.String(30))
-    create_date = db.Column(db.String(30))
+    description = db.Column(db.String(200))
+    created_at = db.Column(db.String(30))
+    updated_at = db.Column(db.String(30))
+
+    def get_id(self):
+        return self.user_id
 
 # ポモドーロタイマー情報クラスを作成
 class PomodoroTimers(db.Model):
