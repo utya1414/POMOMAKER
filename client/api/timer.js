@@ -9,9 +9,12 @@ export const CreateTimer = async (data) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then((response) => response.json());
-  if (response.status === "failed") throw new Error("Failed to create timer");
-  if (response.status === "error") throw new Error("Error creating timer");
+  });
+
+  const json_response = await response.json();
+  if (json_response.status === "failed")
+    throw new Error("Failed to create timer");
+  if (json_response.status === "error") throw new Error("Error creating timer");
 };
 
 export const GetTimerCardStatsById = async (timer_id) => {
@@ -20,10 +23,12 @@ export const GetTimerCardStatsById = async (timer_id) => {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => response.json());
-  if (response.status === "failed") throw new Error("Failed to fetch timer");
-  if (response.status === "error") throw new Error("Error fetching timer");
-  return response.data.timer;
+  });
+  const json_response = await response.json();
+  if (json_response.status === "failed")
+    throw new Error("Failed to fetch timer");
+  if (json_response.status === "error") throw new Error("Error fetching timer");
+  return json_response.data;
 };
 
 export const GetAllTimerCardStats = async () => {
@@ -32,14 +37,14 @@ export const GetAllTimerCardStats = async () => {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => response.json());
-
-  if (response.status === "failed")
-    throw new Error("Failed to fetch timer stats");
-
-  if (response.status === "error")
-    throw new Error("Error fetching timer stats");
-  return response.data;
+  });
+  const json_response = await response.json();
+  console.log(json_response.data.timers);
+  if (json_response.status === "failed")
+    throw new Error("Failed to fetch timers");
+  if (json_response.status === "error")
+    throw new Error("Error fetching timers");
+  return json_response.data;
 };
 
 export const EditTimer = async (data, timer_id) => {
@@ -49,10 +54,11 @@ export const EditTimer = async (data, timer_id) => {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
-  }).then((response) => response.json());
-
-  if (response.status === "failed") throw new Error("Failed to edit timer");
-  if (response.status === "error") throw new Error("Error editing timer");
+  });
+  const json_response = await response.json();
+  if (json_response.status === "failed")
+    throw new Error("Failed to edit timer");
+  if (json_response.status === "error") throw new Error("Error editing timer");
 };
 
 export const DeleteTimer = async (timer_id) => {
@@ -61,8 +67,10 @@ export const DeleteTimer = async (timer_id) => {
     headers: {
       "Content-Type": "application/json",
     },
-  }).then((response) => response.json());
+  });
 
-  if (response.status === "failed") throw new Error("Failed to delete timer");
-  if (response.status === "error") throw new Error("Error deleting timer");
+  const json_response = await response.json();
+  if (json_response.status === "failed")
+    throw new Error("Failed to delete timer");
+  if (json_response.status === "error") throw new Error("Error deleting timer");
 };
