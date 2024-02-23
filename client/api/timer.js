@@ -26,7 +26,7 @@ export const GetTimerCardStatsById = async (timer_id) => {
   return response.data.timer;
 };
 
-export const GetTimerCardStats = async () => {
+export const GetAllTimerCardStats = async () => {
   const response = await fetch(ServerBaseURL + "timer", {
     method: "GET",
     headers: {
@@ -43,8 +43,7 @@ export const GetTimerCardStats = async () => {
 };
 
 export const EditTimer = async (data, timer_id) => {
-  console.log(data, timer_id);
-  const response = await fetch(ServerBaseURL + "timer/" + { timer_id }, {
+  const response = await fetch(ServerBaseURL + "timer/" + timer_id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -54,4 +53,16 @@ export const EditTimer = async (data, timer_id) => {
 
   if (response.status === "failed") throw new Error("Failed to edit timer");
   if (response.status === "error") throw new Error("Error editing timer");
+};
+
+export const DeleteTimer = async (timer_id) => {
+  const response = await fetch(ServerBaseURL + "timer/" + timer_id, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => response.json());
+
+  if (response.status === "failed") throw new Error("Failed to delete timer");
+  if (response.status === "error") throw new Error("Error deleting timer");
 };

@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { GetTimerCardStats } from "@/api/timer";
+import { GetAllTimerCardStats } from "@/api/timer";
 import StatsTimerCard from "./StatsTimerCard";
 
 const TimerList = () => {
@@ -15,7 +15,7 @@ const TimerList = () => {
 };
 
 async function TimerCardStatsWrapper() {
-  const stats = await GetTimerCardStats();
+  const stats = await GetAllTimerCardStats();
   return <StatsTimerCards loading={false} data={stats} />;
 }
 

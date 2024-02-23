@@ -1,42 +1,63 @@
 import React, { useState } from "react";
 
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../shadcn-ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/lib/components/shadcn-ui/alert-dialog";
+import { Button } from "@/lib/components/shadcn-ui/button";
 
-import { Input } from "../shadcn-ui/input";
-import { Textarea } from "../shadcn-ui/textarea";
-import { Button } from "../shadcn-ui/button";
 import { RiDeleteBin6Line } from "react-icons/ri";
+
+import { useToast } from "../shadcn-ui/use-toast";
+import { DeleteTimer } from "@/api/timer";
 
 const DeleteTimerBtn = ({ timer_id }) => {
   return (
     <div>
-      <EditTimerDialog timer_id={timer_id} />
+      <DeleteTimerDialog timer_id={timer_id} />
     </div>
   );
 };
 
-const EditTimerDialog = ({ timer_id }) => {
-  const [open, setOpen] = useState(false);
+const DeleteTimerDialog = ({ timer_id }) => {
+  const { toast } = useToast();
+  const onClickHandler = () => {
+    DeleteTimer(timer_id);
+    toast({
+      status: "success",
+      description: (
+        <>
+          <p className="text-green-500 font-bold">タイマーを削除しました</p>
+        </>
+      ),
+    });
+  };
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+    <AlertDialog>
+      <AlertDialogTrigger asChild>
         <Button variant="outline" className="font-semibold space-x-2 w-24 h-12">
           <RiDeleteBin6Line />
           <span>削除</span>
         </Button>
-      </DialogTrigger>
-      <DialogContent className="">
-        <DialogHeader>
-          <DialogTitle>ポモドーロタイマー編集画面</DialogTitle>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
+      </AlertDialogTrigger>
+      <AlertDialogContent>
+        <AlertDialogHeader>
+          <AlertDialogTitle>ポモドーロタイマー削除画面</AlertDialogTitle>
+          <AlertDialogDescription>本当に削除しますか？</AlertDialogDescription>
+        </AlertDialogHeader>
+        <AlertDialogFooter>
+          <AlertDialogCancel>戻る</AlertDialogCancel>
+          <AlertDialogAction onClick={onClickHandler}>削除</AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

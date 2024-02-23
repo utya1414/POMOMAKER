@@ -37,8 +37,11 @@ const StatsTimerCard = (props) => {
     router.push(`/timer/${timer_id}`);
   };
   return (
-    <Card className="min-w-full hover:bg-muted" onClick={onClickHandler}>
-      <CardContent className="flex justify-between items-center">
+    <Card className="min-w-full flex justify-between items-center">
+      <CardContent
+        className="w-full border-r hover:bg-muted hover:rounded-l-xl cursor-pointer"
+        onClick={onClickHandler}
+      >
         <div>
           <h1 className="text-2xl font-extrabold mt-6 mb-1">{timer_name}</h1>
           <div className="flex space-x-1 text-muted-foreground">
@@ -47,11 +50,11 @@ const StatsTimerCard = (props) => {
             <p>ラウンド数 {rounds}回</p>
           </div>
         </div>
-        <div className="mt-6 flex space-x-2">
-          <EditTimerBtn timer_id={timer_id} />
-          <DeleteTimerBtn timer_id={timer_id} />
-        </div>
       </CardContent>
+      <div className=" min-w-64 flex justify-center space-x-2">
+        <EditTimerBtn timer_id={timer_id} />
+        <DeleteTimerBtn timer_id={timer_id} />
+      </div>
     </Card>
   );
 };
