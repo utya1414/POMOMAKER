@@ -4,7 +4,7 @@ from modules.models import Timers
 from flask_login import current_user
 timer_handle_app = Blueprint('timer', __name__)
 
-# body: { 
+# request_body: { 
 #         "timer_id": timer_id,
 #         "timer_name": timer_name,
 #         "timer_description": timer_description,
@@ -15,7 +15,6 @@ timer_handle_app = Blueprint('timer', __name__)
 #         "break_sound_source": break_sound_source,
 #         "isPublic": isPublic 
 #       }
-# response: { "message": "Pomodoro Timer added successfully" }
 @timer_handle_app.route('/api/timer', methods=['POST'])
 def insert_timer():
     data = request.get_json()
@@ -37,16 +36,18 @@ def insert_timer():
     )
     db.session.add(timer)
     db.session.commit()
-    return jsonify({'message': 'Pomodoro Timer added successfully'})
+    return jsonify({
+        "status": "success",
+        'message': 'Pomodoro Timer added successfully'})
 
-# response: { "message": "Pomodoro Timer deleted successfully" }
 @timer_handle_app.route('/api/timer/<int:id>', methods=['DELETE'])
-def delete_timer():
-    data = request.get_json()
-    timer = Timers.query.filter_by(timer_id=data['timer_id']).first()
+def delete_timer(id):
+    timer = Timers.query.filter_by(timer_id=id).first()
     db.session.delete(timer)
     db.session.commit()
-    return jsonify({'message': 'Pomodoro Timer deleted successfully'})
+    return jsonify({
+        "status": "success",
+        'message': 'Pomodoro Timer deleted successfully'})
 
 # response: { timer_info1, timer_info2, ...}
 @timer_handle_app.route('/api/timer', methods=['GET'])
@@ -66,35 +67,36 @@ def get_all_timers():
             'break_sound_source': timer.break_sound_source,
             'isPublic': timer.isPublic
         })
-    return jsonify(timer_list)
+    return jsonify({
+        "status": "success",
+        "message": "Pomodoro Timers fetched all successfully",
+        "data": {
+            "timers": timer_list
+        }
+    })
 
-
-# response: {
-#             "timer_id": timer_id,
-#             "user_id": user_id,
-#             "timer_name": timer_name,
-#             "timer_description": timer_description,
-#             "work_length": work_length,
-#             "break_length": break_length,
-#             "rounds": rounds,
-#             "work_sound_source": work_sound_source,
-#             "break_sound_source": break_sound_source,
-#             "isPublic": isPublic
-#           }
 @timer_handle_app.route('/api/timer/<int:id>', methods=['GET'])
 def get_timer_by_id(id):
     timer = Timers.query.filter_by(timer_id=id).first()
     if not timer:
         return jsonify({'message': 'Timer not found'})
-    return jsonify({
-        'timer_id': timer.timer_id,
-        'user_id': timer.user_id,
-        'timer_name': timer.timer_name,
-        'timer_description': timer.timer_description,
-        'work_length': timer.work_length,
-        'break_length': timer.break_length,
-        'rounds': timer.rounds,
-        'work_sound_source': timer.work_sound_source,
-        'break_sound_source': timer.break_sound_source,
-        'isPublic': timer.isPublic
-    })
+    return jsonify(
+        {
+            "status": "success",
+            "message": "Pomodoro Timer fetched successfully",
+            "data": {
+                "timer": {
+                    'timer_id': timer.timer_id,
+                    'user_id': timer.user_id,
+                    'timer_name': timer.timer_name,
+                    'timer_description': timer.timer_description,
+                    'work_length': timer.work_length,
+                    'break_length': timer.break_length,
+                    'rounds': timer.rounds,
+                    'work_sound_source': timer.work_sound_source,
+                    'break_sound_source': timer.break_sound_source,
+                    'isPublic': timer.isPublic
+                
+                }
+            }
+        })
