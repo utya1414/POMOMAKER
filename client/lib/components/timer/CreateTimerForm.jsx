@@ -1,14 +1,3 @@
-import React, { useState } from "react";
-import { BiEditAlt } from "react-icons/bi";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../shadcn-ui/dialog";
-
 import {
   Form,
   FormDescription,
@@ -28,7 +17,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "../shadcn-ui/use-toast";
-import { EditTimer } from "@/api/timer";
+import { CreateTimer } from "@/api/timer";
 
 // zod による form のバリデーション
 const formSchema = z.object({
@@ -105,27 +94,7 @@ const formProps = {
   },
 };
 
-const EditTimerBtn = ({ timer_id }) => {
-  const [open, setOpen] = useState(false);
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="font-semibold space-x-2">
-          <BiEditAlt />
-          <span>編集</span>
-        </Button>
-      </DialogTrigger>
-      <DialogContent className="">
-        <DialogHeader>
-          <DialogTitle>ポモドーロタイマー編集画面</DialogTitle>
-        </DialogHeader>
-        <EditTimerForm setOpen={setOpen} timer_id={timer_id} />
-      </DialogContent>
-    </Dialog>
-  );
-};
-
-const EditTimerForm = ({ setOpen, timer_id }) => {
+const CreateTimerForm = ({ setOpen }) => {
   const { toast } = useToast();
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -142,13 +111,13 @@ const EditTimerForm = ({ setOpen, timer_id }) => {
   });
 
   const onSubmit = (data) => {
-    EditTimer(data, timer_id);
+    CreateTimer(data);
     setOpen(false);
     toast({
       status: "success",
       description: (
         <>
-          <p className="text-green-500 font-bold">タイマーを編集しました</p>
+          <p className="text-green-500 font-bold">タイマーを作成しました</p>
           <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
             <code className="text-white">{JSON.stringify(data, null, 2)}</code>
           </pre>
@@ -172,12 +141,11 @@ const EditTimerForm = ({ setOpen, timer_id }) => {
         </div>
         <InputForm form={form} {...formProps.rounds} />
         <SwitchForm form={form} {...formProps.isPublic} />
-        <Button type="submit">編集</Button>
+        <Button type="submit">作成</Button>
       </form>
     </Form>
   );
 };
-
 const InputForm = ({ form, name, label, placeholder, type, description }) => {
   return (
     <FormField
@@ -242,4 +210,4 @@ const SwitchForm = ({ form, name, label, description }) => {
   );
 };
 
-export default EditTimerBtn;
+export default CreateTimerForm;

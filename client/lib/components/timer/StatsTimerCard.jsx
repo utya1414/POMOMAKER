@@ -1,16 +1,9 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "../shadcn-ui/card";
+import { Card, CardContent } from "../shadcn-ui/card";
 import { Skeleton } from "../shadcn-ui/skeleton";
-import { Label } from "../shadcn-ui/label";
 
 import EditTimerBtn from "./EditTimerBtn";
+import DeleteTimerBtn from "./DeleteTimerBtn";
 
 const StatsTimerCard = (props) => {
   const { loading, timer_info } = props;
@@ -39,14 +32,19 @@ const StatsTimerCard = (props) => {
 
   return (
     <Card className="min-w-full">
-      <CardContent>
-        <h1 className="text-2xl font-extrabold mt-6 mb-1">{timer_name}</h1>
-        <div className="flex space-x-1 text-muted-foreground">
-          <p>作業時間 {work_length}分</p>
-          <p>休憩時間 {break_length}分</p>
-          <p>ラウンド数 {rounds}回</p>
+      <CardContent className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-extrabold mt-6 mb-1">{timer_name}</h1>
+          <div className="flex space-x-1 text-muted-foreground">
+            <p>作業時間 {work_length}分</p>
+            <p>休憩時間 {break_length}分</p>
+            <p>ラウンド数 {rounds}回</p>
+          </div>
         </div>
-        <EditTimerBtn />
+        <div className="mt-6">
+          <EditTimerBtn timer_id={timer_id} />
+          <DeleteTimerBtn timer_id={timer_id} />
+        </div>
       </CardContent>
     </Card>
   );
