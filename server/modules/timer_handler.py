@@ -40,14 +40,6 @@ def insert_timer():
         "status": "success",
         'message': 'Pomodoro Timer added successfully'})
 
-@timer_handle_app.route('/api/timer/<int:id>', methods=['DELETE'])
-def delete_timer(id):
-    timer = Timers.query.filter_by(timer_id=id).first()
-    db.session.delete(timer)
-    db.session.commit()
-    return jsonify({
-        "status": "success",
-        'message': 'Pomodoro Timer deleted successfully'})
 
 # response: { timer_info1, timer_info2, ...}
 @timer_handle_app.route('/api/timer', methods=['GET'])
@@ -100,3 +92,35 @@ def get_timer_by_id(id):
                 }
             }
         })
+
+@timer_handle_app.route('/api/timer/<int:id>', methods=['PUT'])
+def update_timer(id):
+    timer = Timers.query.filter_by(timer_id=id).first()
+    data = request.get_json()
+    if data['isPublic'] == 'true':
+        data['isPublic'] = True
+    else:
+        data['isPublic'] = False
+        
+    timer.timer_name = data['timer_name']
+    timer.timer_description = data['timer_description']
+    timer.work_length = data['work_length']
+    timer.break_length = data['break_length']
+    timer.rounds = data['rounds']
+    timer.work_sound_source = data['work_sound_source']
+    timer.break_sound_source = data['break_sound_source']
+    timer.isPublic = data['isPublic']
+    db.session.commit()
+    return jsonify({
+        "status": "success",
+        'message': 'Pomodoro Timer updated successfully'})
+
+
+@timer_handle_app.route('/api/timer/<int:id>', methods=['DELETE'])
+def delete_timer(id):
+    timer = Timers.query.filter_by(timer_id=id).first()
+    db.session.delete(timer)
+    db.session.commit()
+    return jsonify({
+        "status": "success",
+        'message': 'Pomodoro Timer deleted successfully'})
