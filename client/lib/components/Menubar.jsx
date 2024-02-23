@@ -29,6 +29,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useToast } from "./shadcn-ui/use-toast";
+import { CreateTimer } from "@/api/timer";
 
 // zod による form のバリデーション
 const formSchema = z.object({
@@ -147,8 +148,7 @@ const CreateTimerForm = ({ setOpen }) => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
-    GetFormCardStats();
+    CreateTimer(data);
     setOpen(false);
     toast({
       status: "success",
