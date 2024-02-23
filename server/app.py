@@ -22,6 +22,7 @@ def create_app():
     def load_user(user_id):
         return Users.query.get(int(user_id))
     
+    app.secret_key = 'team-16-api-secret-key'
 
     # modules下のブループリントを呼び出す
     from modules.user_handler import user_handle_app
