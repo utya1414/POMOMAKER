@@ -15,9 +15,8 @@ class Users(db.Model, UserMixin):
     def get_id(self):
         return self.user_id
 
-# ポモドーロタイマー情報クラスを作成
-class PomodoroTimers(db.Model):
-      __tablename__ = 'pomodoro_timers'
+class Timers(db.Model):
+      __tablename__ = 'timers'
       timer_id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
       user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
       timer_name = db.Column(db.String(50), nullable=False)
