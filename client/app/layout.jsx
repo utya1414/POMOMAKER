@@ -1,6 +1,6 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { AppLogo, Footer, Sidebar } from "@/lib/components/layouts";
+import { AppLogo, Footer } from "@/lib/components/layouts";
 import { ThemeProvider } from "@/lib/components/providers/ThemeProvider";
 import { Toaster } from "@/lib/components/shadcn-ui/Toaster";
 import { Separator } from "@/lib/components/shadcn-ui/separator";
@@ -26,10 +26,7 @@ export default function RootLayout({ children }) {
               <AppLogo />
             </div>
             <Separator />
-            <div className="flex w-full flex-grow">
-              <Sidebar />
-              <main className="flex w-full flex-grow">{children}</main>
-            </div>
+            <main className="flex w-full flex-grow">{children}</main>
             <Separator />
             <Footer />
           </div>

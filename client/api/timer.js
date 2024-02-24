@@ -37,9 +37,9 @@ export const GetAllTimerCardStats = async () => {
     headers: {
       "Content-Type": "application/json",
     },
+    cache: "no-store",
   });
   const json_response = await response.json();
-  console.log(json_response.data.timers);
   if (json_response.status === "failed")
     throw new Error("Failed to fetch timers");
   if (json_response.status === "error")
