@@ -1,7 +1,7 @@
-import React from "react";
+import SignUpPage from "@/lib/components/auth/SignUp";
 
 const page = () => {
-  return <div>page</div>;
+  return <SignUpPage />;
 };
 
 export default page;
