@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 // ユーザー登録、サインアップ機能
 // 引数: email, password, name　返却値: 
 async function SignUp (email, password, name) {
-    await fetch(`${ServerBaseURL}signup`, {
+    const result = await fetch(`${ServerBaseURL}signup`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -16,13 +16,15 @@ async function SignUp (email, password, name) {
         console.log(data)
         // JWTをCookieに保存する
         Cookies.set('jwt', data.access_token);
+        return data;
     });
+    return result;
 };
 
 // ログイン機能
 // 引数: email, password　返却値: 
 async function LogIn (email, password) {
-    await fetch(`${ServerBaseURL}login`, {
+    const result = await fetch(`${ServerBaseURL}login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -34,13 +36,15 @@ async function LogIn (email, password) {
         console.log(data)
         // JWTをCookieに保存する
         Cookies.set('jwt', data.access_token);
+        return data;
     });
+    return result;
 };
 
 // ログアウト機能
 // 引数: 無し　返却値: 無し
 async function LogOut () {
-    await fetch(`${ServerBaseURL}logout`, {
+    const result = await fetch(`${ServerBaseURL}logout`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -48,16 +52,20 @@ async function LogOut () {
         },
     })
     .then((response) => response.json())
-    .then((data) => console.log(data));    
-    // JWTをCookieから削除する
-    Cookies.remove('jwt');
+    .then((data) => {
+        console.log(data)
+        // JWTをCookieから削除する
+        Cookies.remove('jwt');
+        return data;
+    });    
+    return result;
 };
 
 // ログインしているユーザにのみ、ユーザー情報を返却する
 // 引数: 無し　返却値: 'user_id', 'email', 'user_name', 'description', 'created_at', 'updated_at'
 async function GetUserInfo () {
     console.log("GetUserInfo:", Cookies.get('jwt'));
-    const res = await fetch(`${ServerBaseURL}get_user_info`, {
+    const result = await fetch(`${ServerBaseURL}get_user_info`, {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
@@ -69,13 +77,13 @@ async function GetUserInfo () {
         console.log(data)
         return data
     });
-    return res;
+    return result;
 };
 
 // ユーザー情報を更新する
 // 引数: 'email', 'password', 'user_name', 'description'　返却値: 無し
 async function UpdateUserInfo (email, password, user_name, description) {
-    await fetch(`${ServerBaseURL}update_user_info`, {
+    const result = await fetch(`${ServerBaseURL}update_user_info`, {
         method: "PATCH",
         headers: {
             "Content-Type": "application/json",
@@ -84,13 +92,17 @@ async function UpdateUserInfo (email, password, user_name, description) {
         body: JSON.stringify({ "email": email, "password": password, "user_name": user_name, "description": description }),
     })
     .then((response) => response.json())
-    .then((data) => console.log(data));
+    .then((data) => {
+        console.log(data)
+        return data
+    });
+    return result;
 };
 
 // ユーザー情報を削除する
 // 引数: 無し　返却値: 無し
 async function DeleteUserInfo () {
-    await fetch(`${ServerBaseURL}delete`, {
+    const result = await fetch(`${ServerBaseURL}delete`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -98,15 +110,19 @@ async function DeleteUserInfo () {
         },
     })
     .then((response) => response.json())
-    .then((data) => console.log(data));
-    // JWTをCookieから削除する
-    Cookies.remove('jwt');
+    .then((data) => {
+        console.log(data)
+        // JWTをCookieから削除する
+        Cookies.remove('jwt');
+        return data
+    });
+    return result;
 };
 
 // アクセスしたユーザーがログインしているかどうかをTrue or Falseで返却する
 // 引数: 無し　返却値: True or False
 const IsLoggedIn = async () => {
-    const res = await fetch(`${ServerBaseURL}is_logged_in`, {
+    const result = await fetch(`${ServerBaseURL}is_logged_in`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -118,7 +134,7 @@ const IsLoggedIn = async () => {
         console.log(data)
         return data
     });
-    return res;
+    return result;
 };
 
 // すべての関数を一度にエクスポート

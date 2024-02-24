@@ -2,11 +2,16 @@
 import React from "react";
 import { Button } from "@/lib/components/shadcn-ui/button";
 import { useRouter } from "next/navigation";
+import { user_access } from "@/api/user";
+
 const LogoutBtn = () => {
   const router = useRouter();
-  const onClickHandler = () => {
+  const onClickHandler = async () => {
     console.log("logout");
-    router.push("auth/login");
+    const result = await user_access.LogOut();
+    if (result.status === "success") {
+      router.push("auth/login");
+    }
   };
   return (
     <div>
