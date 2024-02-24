@@ -1,14 +1,3 @@
-"use client";
-import React, { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "./shadcn-ui/dialog";
-
 import {
   Form,
   FormDescription,
@@ -17,18 +6,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./shadcn-ui/form";
+} from "../shadcn-ui/form";
 
-import { Input } from "./shadcn-ui/input";
-import { Textarea } from "./shadcn-ui/textarea";
-import { Slider } from "./shadcn-ui/slider";
-import { Button } from "./shadcn-ui/button";
-import { Switch } from "./shadcn-ui/switch";
+import { Input } from "../shadcn-ui/input";
+import { Textarea } from "../shadcn-ui/textarea";
+import { Button } from "../shadcn-ui/button";
+import { Switch } from "../shadcn-ui/switch";
 
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useToast } from "./shadcn-ui/use-toast";
+import { useToast } from "../shadcn-ui/use-toast";
+import { CreateTimer } from "@/api/timer";
 
 // zod による form のバリデーション
 const formSchema = z.object({
@@ -105,31 +94,6 @@ const formProps = {
   },
 };
 
-const Menubar = () => {
-  return (
-    <div>
-      <CreateTimerButtonDialog />
-    </div>
-  );
-};
-
-const CreateTimerButtonDialog = () => {
-  const [open, setOpen] = useState(false);
-  return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="bg-black text-white  text-2xl py-2 px-4 rounded-md">
-        新規作成
-      </DialogTrigger>
-      <DialogContent className="">
-        <DialogHeader>
-          <DialogTitle>ポモドーロタイマー作成画面</DialogTitle>
-        </DialogHeader>
-        <CreateTimerForm setOpen={setOpen} />
-      </DialogContent>
-    </Dialog>
-  );
-};
-
 const CreateTimerForm = ({ setOpen }) => {
   const { toast } = useToast();
   const form = useForm({
@@ -147,8 +111,7 @@ const CreateTimerForm = ({ setOpen }) => {
   });
 
   const onSubmit = (data) => {
-    console.log(data);
-    GetFormCardStats();
+    CreateTimer(data);
     setOpen(false);
     toast({
       status: "success",
@@ -247,4 +210,4 @@ const SwitchForm = ({ form, name, label, description }) => {
   );
 };
 
-export default Menubar;
+export default CreateTimerForm;

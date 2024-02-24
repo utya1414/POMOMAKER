@@ -5,7 +5,7 @@ class DevelopmentConfig:
     # SQLAlchemyの設定
     SQLALCHEMY_DATABASE_URI = 'sqlite:///sample.db'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_ECHO = True
 
    # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sample.db'
     # app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/dbname'
