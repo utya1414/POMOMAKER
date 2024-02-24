@@ -1,7 +1,11 @@
 import React from "react";
-
-const page = () => {
-  return <div>page</div>;
+import LogoutBtn from "@/lib/components/user/auth/LogoutBtn";
+const UserPage = () => {
+  return (
+    <div>
+      <LogoutBtn />
+    </div>
+  );
 };
 
-export default page;
+export default UserPage;

@@ -1,7 +1,11 @@
-import SignUpPage from "@/lib/components/auth/SignUp";
+import SignUpForm from "@/lib/components/user/auth/SignUpForm";
 
-const page = () => {
-  return <SignUpPage />;
+const SignUpPage = () => {
+  return (
+    <div className="w-full flex justify-center items-center">
+      <SignUpForm />
+    </div>
+  );
 };
 
-export default page;
+export default SignUpPage;

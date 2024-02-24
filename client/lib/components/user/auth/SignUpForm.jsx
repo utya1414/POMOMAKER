@@ -26,14 +26,6 @@ const formSchema = z.object({
   }),
 });
 
-const SignUpPage = () => {
-  return (
-    <div className="w-full flex justify-center items-center">
-      <SignUpForm />
-    </div>
-  );
-};
-
 const SignUpForm = () => {
   const router = useRouter();
   const form = useForm({
@@ -100,4 +92,4 @@ const SignUpForm = () => {
   );
 };
 
-export default SignUpPage;
+export default SignUpForm;
