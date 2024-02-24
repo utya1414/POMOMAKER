@@ -1,11 +1,10 @@
 from imaplib import _Authenticator
 from flask import Blueprint, jsonify, request, make_response
-from flask_restx import Api, Resource
 from database import db
 from modules.models import Users
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 user_handle_app = Blueprint('index', __name__) # ブループリントの作成
 
@@ -23,7 +22,10 @@ def signup():
     # もし既にemailが存在していたらエラーメッセージを返す
     user = Users.query.filter_by(email=email).first()
     if user:
-        return jsonify({'message': 'Email address already exists'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'Email address already exists'
+        })
     
     # ユーザーが存在しなかったら新規ユーザーを作成する（パスワードはハッシュ化して保存）
     new_user = Users(
@@ -39,7 +41,10 @@ def signup():
     user_id = new_user.user_id
     # JWTトークンを生成
     access_token = create_access_token(identity=user_id)
-    return jsonify(access_token=access_token)
+    return jsonify({
+        'status': 'success',
+        'access_token': access_token
+    })
 
 # ログイン機能
 # 引数: 'email', 'password'　返却値: 'access_token': JWTトークン or emailエラー文 or passwordエラー文
@@ -52,15 +57,24 @@ def login():
     # email（ユニーク）とpasswordが一致するユーザーが存在するか確認
     user = Users.query.filter_by(email=email).first()
     if not user:
-        return jsonify({'message': 'Email address not found'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'Email address not found'
+        })
     if not check_password_hash(user.password, password):
-        return jsonify({'message': 'Password incorrect'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'Password incorrect'
+        })
     
     # ユーザーIDを取得
     user_id = user.user_id
     # JWTトークンを生成
     access_token = create_access_token(identity=user_id)
-    return jsonify(access_token=access_token)
+    return jsonify({
+        'status': 'success',
+        'access_token': access_token
+    })
 
 # ログアウト機能
 # 引数: なし　返却値: 'message': 成功文
@@ -69,9 +83,15 @@ def login():
 def logout():
     current_identity = get_jwt_identity()
     if current_identity:
-        return jsonify({'message': 'Logged out successfully'})
+        return jsonify({
+            'status': 'success',    
+            'message': 'Logged out successfully'
+        })
     else:
-        return jsonify({'message': 'not logged in'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'not logged in'
+        })
 
 # ログインしているユーザにのみ、ユーザー情報を返却する
 # 引数: なし　返却値: 'user_id', 'email', 'user_name', 'description', 'created_at', 'updated_at'
@@ -83,16 +103,22 @@ def get_user_info():
     # ユーザー情報を取得
     user = Users.query.filter_by(user_id=current_identity).first()
     if not user:
-        return jsonify({'message': 'User not found'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'User not found'
+        })
     
     return jsonify({
-        'user_id': user.user_id,
-        'email': user.email,
-        # 'password' は返却しない
-        'user_name': user.user_name,
-        'description': user.description,
-        'created_at': user.created_at,
-        'updated_at': user.updated_at
+        'status': 'success',
+        'data': {
+            'user_id': user.user_id,
+            'email': user.email,
+            # 'password' は返却しない
+            'user_name': user.user_name,
+            'description': user.description,
+            'created_at': user.created_at,
+            'updated_at': user.updated_at
+        }
     })
 
 # ユーザー情報を更新する
@@ -111,20 +137,32 @@ def update_user_info():
     
     # nullable=falseの要素がnullだった場合はエラーメッセージを返す
     if email == '' or password == '' or user_name == '':
-        return jsonify({'message': 'Please fill in all required fields'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'Please fill in all required fields'
+        })
     # 文字数の制限を超えた場合はエラーメッセージを返す
     if len(email) > 50 or len(password) > 50 or len(user_name) > 50 or len(description) > 200:
-        return jsonify({'message': 'string length over'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'string length over'
+        })
     
     # 新しく設定しようとしているemailが既存のemailと重複していないか確認
     user = Users.query.filter_by(email=email).first()
     if user and user.user_id != current_identity:
-        return jsonify({'message': 'Email address already exists'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'Email address already exists'
+        })
     
     # ユーザー情報を取得
     user = Users.query.filter_by(user_id=current_identity).first()
     if not user:
-        return jsonify({'message': 'User not found'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'User not found'
+        })
 
     # ユーザー情報を更新
     user.email = email
@@ -133,7 +171,10 @@ def update_user_info():
     user.description = description
     user.updated_at = updated_at
     db.session.commit()
-    return jsonify({'message': 'User info updated successfully'})
+    return jsonify({
+        'status': 'success',
+        'message': 'User info updated successfully'
+    })
 
 # ユーザー情報を削除する
 # 引数: なし　返却値: 'message': 成功文 or 未ログイン文 or ユーザ一致無し文
@@ -143,10 +184,16 @@ def delete_user():
     # ユーザー情報を取得
     user = Users.query.filter_by(user_id=current_identity).first()
     if not user:
-        return jsonify({'message': 'User not found'})
+        return jsonify({
+            'status': 'failed',
+            'message': 'User not found'
+        })
     db.session.delete(user)
     db.session.commit()
-    return jsonify({'message': 'User deleted successfully'})
+    return jsonify({
+        'status': 'success',
+        'message': 'User deleted successfully'
+    })
 
 # ログインしているかをTrue or Falseで返却する
 # 引数: なし　返却値: 'logged_in': True or False
@@ -155,6 +202,6 @@ def delete_user():
 def is_logged_in():
     current_identity = get_jwt_identity()
     if current_identity:
-        return jsonify({'logged_in': True})
+        return jsonify({'status': 'success'})
     else:
-        return jsonify({'logged_in': False})
+        return jsonify({'status': 'failed'})

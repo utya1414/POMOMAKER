@@ -18,6 +18,8 @@ import { string, z } from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { user_access } from "@/api/user";
+
 const formSchema = z.object({
   email: string().email({ message: "有効なメールアドレスを入力してください" }),
   password: string().min(8, {
@@ -34,9 +36,13 @@ const LoginForm = () => {
     },
   });
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log(values);
-    router.push("/");
+    const result = await user_access.LogIn(values.email, values.password);
+    console.log(result);
+    if (result.status === "success") {
+      router.push("/");
+    }
   }
   return (
     <Form {...form}>

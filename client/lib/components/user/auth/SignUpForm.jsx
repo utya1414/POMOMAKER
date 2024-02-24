@@ -18,6 +18,8 @@ import { string, z } from "zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
+import { user_access } from "@/api/user";
+
 const formSchema = z.object({
   username: string().min(1, { message: "1文字以上で入力してください" }),
   email: string().email({ message: "有効なメールアドレスを入力してください" }),
@@ -32,12 +34,18 @@ const SignUpForm = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       username: "",
+      email: "",
+      password: "",
     },
   });
 
-  function onSubmit(values) {
+  async function onSubmit(values) {
     console.log(values);
-    router.push("/");
+    const result = await user_access.SignUp(values.email, values.password, values.username);
+    console.log(result);
+    if (result.status === "success") {
+      router.push("/");
+    }
   }
   return (
     <Form {...form}>
