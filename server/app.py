@@ -7,7 +7,8 @@ from modules.models import Users
 def create_app():
     # Flaskのインスタンスを作成
     app = Flask(__name__)
-    CORS(app)
+    # オリジンは全て許可する
+    CORS(app, supports_credentials=True, origins='*')
 
     app.config.from_object('config.DevelopmentConfig')
 
