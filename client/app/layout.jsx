@@ -21,14 +21,17 @@ export default function RootLayout({ children }) {
           enableSystem
           diableTransitionOnChange
         >
-          <div className="flex flex-col min-h-screen min-w-full bg-background max-h-screen">
-            <div className="my-4 text-4xl font-sans flex justify-center items-center">
-              <AppLogo />
+          {/* ブラウザのスケールを67%に設定 */}
+          <div className="scale-[.67] origin-top-left w-[calc(100%/0.67)]">
+            <div className="flex flex-col min-h-screen min-w-full bg-background max-h-screen ">
+              <div className="my-4 text-4xl font-sans flex justify-center items-center">
+                <AppLogo />
+              </div>
+              <Separator />
+              <main className="flex w-full flex-grow">{children}</main>
+              <Separator />
+              <Footer />
             </div>
-            <Separator />
-            <main className="flex w-full flex-grow">{children}</main>
-            <Separator />
-            <Footer />
           </div>
           <Toaster />
         </ThemeProvider>

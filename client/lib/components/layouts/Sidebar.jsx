@@ -10,7 +10,7 @@ import ThemeSwitcher from "../ThemeSwitcher";
 const iconStyle = "w-16 h-16 my-6";
 const Sidebar = () => {
   return (
-    <div className="flex flex-col justify-center items-center px-16 py-16 mx-4  my-8 bg-background outline outline-2 rounded-lg">
+    <div className="flex flex-col justify-center items-center px-4 mx-4  my-8 bg-background outline outline-2 rounded-lg">
       <Link href="/user">
         <LuUserCircle2 className={iconStyle} />
       </Link>
