@@ -2,6 +2,8 @@ from flask import Blueprint, jsonify, request
 from database import db
 from modules.models import Timers
 from flask_login import current_user
+from flask_jwt_extended import jwt_required, get_jwt_identity
+
 timer_handle_app = Blueprint('timer', __name__)
 
 # request_body: { 
@@ -15,24 +17,28 @@ timer_handle_app = Blueprint('timer', __name__)
 #         "break_sound_source": break_sound_source,
 #         "isPublic": isPublic 
 #       }
+
 @timer_handle_app.route('/api/timer', methods=['POST'])
+@jwt_required()
 def insert_timer():
     data = request.get_json()
+    current_identity = get_jwt_identity()
+    
     if data['isPublic'] == 'true':
         data['isPublic'] = True
     else:
         data['isPublic'] = False
     
     timer = Timers(
-      user_id = current_user.user_id,
-      timer_name = data['timer_name'],
-      timer_description = data['timer_description'],
-      work_length = data['work_length'],
-      break_length = data['break_length'],
-      rounds = data['rounds'],
-      work_sound_source = data['work_sound_source'],
-      break_sound_source = data['break_sound_source'],
-      isPublic = data['isPublic']
+        user_id = current_identity,
+        timer_name = data['timer_name'],
+        timer_description = data['timer_description'],
+        work_length = data['work_length'],
+        break_length = data['break_length'],
+        rounds = data['rounds'],
+        work_sound_source = data['work_sound_source'],
+        break_sound_source = data['break_sound_source'],
+        isPublic = data['isPublic']
     )
     db.session.add(timer)
     db.session.commit()
@@ -40,11 +46,44 @@ def insert_timer():
         "status": "success",
         'message': 'Pomodoro Timer added successfully'})
 
-
 # response: { timer_info1, timer_info2, ...}
 @timer_handle_app.route('/api/timer', methods=['GET'])
 def get_all_timers():
     timers = Timers.query.all()
+    timer_list = []
+    for timer in timers:
+        timer_list.append({
+            'timer_id': timer.timer_id,
+            'user_id': timer.user_id,
+            'timer_name': timer.timer_name,
+            'timer_description': timer.timer_description,
+            'work_length': timer.work_length,
+            'break_length': timer.break_length,
+            'rounds': timer.rounds,
+            'work_sound_source': timer.work_sound_source,
+            'break_sound_source': timer.break_sound_source,
+            'isPublic': timer.isPublic
+        })
+    return jsonify({
+        "status": "success",
+        "message": "Pomodoro Timers fetched all successfully",
+        "data": {
+            "timers": timer_list
+        }
+    })
+
+# 特定のユーザーが作成したタイマーのみ全取得
+@timer_handle_app.route('/api/timer/user', methods=['PUT'])
+@jwt_required()
+def get_user_timers():
+    current_identity = get_jwt_identity()
+    print("current_identity: ", current_identity)
+    timers = Timers.query.filter_by(user_id=current_identity).all()
+    if not timers:
+        return jsonify({
+            "status": "failed",
+            "message": "Pomodoro Timers not found"
+        })
     timer_list = []
     for timer in timers:
         timer_list.append({

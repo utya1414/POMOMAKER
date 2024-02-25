@@ -16,7 +16,7 @@ async function SignUp(email, password, name) {
       console.log(data);
       // JWTをCookieに保存する
       Cookies.set("jwt", data.access_token);
-      return data;
+      return new Promise((resolve) => setTimeout(() => resolve(data), 0));
     });
   return result;
 }
@@ -36,7 +36,7 @@ async function LogIn(email, password) {
       console.log(data);
       // JWTをCookieに保存する
       Cookies.set("jwt", data.access_token);
-      return data;
+      return new Promise((resolve) => setTimeout(() => resolve(data), 0));
     });
   return result;
 }
