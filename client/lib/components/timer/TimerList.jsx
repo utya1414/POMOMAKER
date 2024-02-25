@@ -1,5 +1,6 @@
+"use client";
 import React, { Suspense } from "react";
-import { GetAllTimerCardStats } from "@/api/timer";
+import { GetTimerCardStatsByUserId } from "@/api/timer";
 import StatsTimerCard from "./StatsTimerCard";
 import { ScrollArea } from "@/lib/components/shadcn-ui/scroll-area";
 
@@ -16,7 +17,7 @@ const TimerList = () => {
 };
 
 async function TimerCardStatsWrapper() {
-  const stats = await GetAllTimerCardStats();
+  const stats = await GetTimerCardStatsByUserId();
   return <StatsTimerCards loading={false} data={stats} />;
 }
 
@@ -25,7 +26,7 @@ const StatsTimerCards = (props) => {
   return (
     <ScrollArea className="h-[900px] py-8">
       <div className="flex flex-col space-y-2 mx-12 my-12">
-        {data.timers.map((timer, index) => {
+        {data && data.timers && data.timers.map((timer, index) => {
           return (
             <StatsTimerCard key={index} loading={loading} timer_info={timer} />
           );

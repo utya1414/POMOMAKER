@@ -37,6 +37,20 @@ def create_app():
     )
     jwt = JWTManager(app)
 
+    @jwt.invalid_token_loader
+    def invalid_token_callback(error):
+        return jsonify({
+            'status': 'failed',
+            'message': 'The token is invalid or expired'
+        }), 401
+
+    @jwt.unauthorized_loader
+    def missing_token_callback(error):
+        return jsonify({
+            'status': 'failed',
+            'message': 'A token must be provided for API calls'
+        }), 401
+
     # マイグレーション機能の設定
     migrate = Migrate(app, db)
 
@@ -57,4 +71,3 @@ app = create_app()
 @app.route('/', methods=['GET'])
 def return_home():
     return jsonify({'message': 'Hello, World!'})
-
