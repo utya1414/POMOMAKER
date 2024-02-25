@@ -26,11 +26,17 @@ const StatsTimerCards = (props) => {
   return (
     <ScrollArea className="h-[900px] py-8">
       <div className="flex flex-col space-y-2 mx-12 my-12">
-        {data && data.timers && data.timers.map((timer, index) => {
-          return (
-            <StatsTimerCard key={index} loading={loading} timer_info={timer} />
-          );
-        })}
+        {data &&
+          data.timers &&
+          data.timers.map((timer, index) => {
+            return (
+              <StatsTimerCard
+                key={index}
+                loading={loading}
+                timer_info={timer}
+              />
+            );
+          })}
       </div>
     </ScrollArea>
   );

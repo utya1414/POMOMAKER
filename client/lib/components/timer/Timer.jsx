@@ -19,15 +19,14 @@ function Timer({ timer_info }) {
     work_length,
     work_sound_source,
   } = timer_info.timer;
-  //   const workTime = work_length;
-  const workTime = 0.25;
+  const workTime = work_length;
   const breakTime = break_length;
   const totalTime = workTime * SECONDS; // 25分を秒単位で
   const [isOnBreak, setIsOnBreak] = useState(false); // 休憩モードを追跡
   const [timeLeft, setTimeLeft] = useState(totalTime);
   const [isRunning, setIsRunning] = useState(false); // タイマーの動作状態を追跡
   const [currentCycle, setCurrentCycle] = useState(0); // 例として現在は2回目
-  const totalCycles = 1;
+  const totalCycles = rounds;
 
   useEffect(() => {
     let interval; // 型を明示的に指定
