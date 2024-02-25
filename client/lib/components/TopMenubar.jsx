@@ -37,7 +37,7 @@ const CreateTimerButtonDialog = () => {
           <p>新規作成</p>
         </Button>
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent className="scale-[.67] rounded-lg">
         <DialogHeader>
           <DialogTitle>ポモドーロタイマー作成画面</DialogTitle>
         </DialogHeader>
