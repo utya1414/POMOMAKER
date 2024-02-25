@@ -47,7 +47,7 @@ const DeleteTimerDialog = ({ timer_id }) => {
           <span>削除</span>
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent>
+      <AlertDialogContent className="scale-[.67] rounded-lg">
         <AlertDialogHeader>
           <AlertDialogTitle>ポモドーロタイマー削除画面</AlertDialogTitle>
           <AlertDialogDescription>本当に削除しますか？</AlertDialogDescription>

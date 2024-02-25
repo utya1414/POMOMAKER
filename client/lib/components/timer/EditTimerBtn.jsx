@@ -115,7 +115,7 @@ const EditTimerBtn = ({ timer_id }) => {
           <span>編集</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="">
+      <DialogContent className="scale-[.67] rounded-lg">
         <DialogHeader>
           <DialogTitle>ポモドーロタイマー編集画面</DialogTitle>
         </DialogHeader>

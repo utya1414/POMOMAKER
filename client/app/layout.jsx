@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
           diableTransitionOnChange
         >
           {/* ブラウザのスケールを67%に設定 */}
-          <div className="scale-[.67] origin-top-left w-[calc(100%/0.67)]">
+          <div className="scale-[.67] origin-top-left w-[calc(100%/0.67)] h-[calc(100%/0.67)]">
             <div className="flex flex-col min-h-screen min-w-full bg-background max-h-screen ">
               <div className="my-4 text-4xl font-sans flex justify-center items-center">
                 <AppLogo />

@@ -118,9 +118,6 @@ const CreateTimerForm = ({ setOpen }) => {
       description: (
         <>
           <p className="text-green-500 font-bold">タイマーを作成しました</p>
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
         </>
       ),
     });
@@ -128,7 +125,10 @@ const CreateTimerForm = ({ setOpen }) => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8"
+      >
         <InputForm form={form} {...formProps.timer_name} />
         <TextareaForm form={form} {...formProps.timer_description} />
         <div className="flex space-x-8">
